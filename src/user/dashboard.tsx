@@ -11,7 +11,6 @@ export const Dashboard = () => {
     dispatch(logoutUser());
     navigate("/", { replace: true });
   };
-  console.log(user);
 
   const now = new Date();
   const currentTime = now.toLocaleTimeString("en-US", {

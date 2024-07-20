@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 
 import { useTheme } from "@/components/providers/theme-provider";
-import { routes } from "@/constants/routes";
+import { routes } from "@/constants";
 import { cn } from "@/lib/utils";
 
 export const Sidebar = () => {
