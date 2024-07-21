@@ -20,31 +20,37 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { formSchema } from "./schema";
+import { loginSchema as loginSchemaFN } from "../schemas/schema";
 import { useIsAuthenticated } from "@/lib/hooks/useIsAuthenticated";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/components/providers/language-provider";
 
 export const LoginForm = () => {
   useIsAuthenticated();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const { lang } = useLanguage();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const loginSchema = loginSchemaFN();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       username: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof loginSchema>) {
     setIsLoading(true);
 
     setTimeout(() => {
       dispatch(loginUser(values));
       setIsLoading(false);
       toast.success(`Welcome ${values.username}`);
-      navigate("/user/dashboard");
+      navigate(`/user/dashboard/?lng=${lang}`);
     }, 1000);
   }
 
@@ -56,7 +62,9 @@ export const LoginForm = () => {
           name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-bold text-xl">Username</FormLabel>
+              <FormLabel className="font-bold text-xl">
+                {t("username")}
+              </FormLabel>
               <FormControl>
                 <Input disabled={isLoading} placeholder="JonDoe" {...field} />
               </FormControl>
@@ -69,7 +77,9 @@ export const LoginForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-bold text-xl">Password</FormLabel>
+              <FormLabel className="font-bold text-xl">
+                {t("password")}
+              </FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -84,11 +94,11 @@ export const LoginForm = () => {
         />
         <Button
           disabled={isLoading}
-          className="w-full max-w-[120px] text-lg"
+          className="w-full max-w-fit text-lg"
           variant="primary"
           type="submit"
         >
-          Login
+          {t("loginButton")}
           {isLoading && <Loader2 className="animate-spin w-6 h-6 ml-2" />}
         </Button>
       </form>

@@ -18,6 +18,11 @@ module.exports = {
     },
     extend: {
       colors: {
+        testPrimary:{
+          DEFAULT:"var(--color-primary)",
+          dark:"var(--color-primary-dark)"
+        },
+        testSecondary:"var(--color-border-primary)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

@@ -1,43 +1,47 @@
-export const ADD_TODO = "ADD_TODO";
-export const TOGGLE_TODO = "TOGGLE_TODO";
-
+import { getItem, setItem } from "@/lib/utils";
+import { Todo } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: any = [];
+const initialState: { todos: Todo[] } = {
+  todos: getItem("todos") || [],
+};
 
 const todosSlice = createSlice({
   name: "todos",
   initialState,
   reducers: {
-    // Give case reducers meaningful past-tense "event"-style names
-    todoAdded(state, { payload }) {
-      const { id, text } = payload;
+    addTodo(state, { payload }) {
+      const newTodo = {
+        id: payload.id as string,
+        describe: payload.describe as string,
+        isCompleted: false,
+      };
+      const todos = getItem("todos") || [];
+      setItem("todos", [...todos, newTodo]);
 
-      console.log(id, text);
-      // "Mutating" update syntax thanks to Immer, and no `return` needed
-      state.push({
-        id,
-        text,
-        completed: false,
-      });
+      state.todos.push(newTodo);
     },
-    todoToggled(state, { payload }) {
-      // Look for the specific nested object to update.
-      // In this case, `action.payload` is the default field in the action,
-      // and can hold the `id` value - no need for `action.id` separately
-      const matchingTodo = state.find((todo: any) => todo.id === payload);
+    updateTodo(state, { payload }) {
+      const newTodo = state.todos.map((todo: Todo) =>
+        todo.id === payload.id
+          ? { ...todo, isCompleted: !todo.isCompleted }
+          : todo
+      );
+      setItem("todos", newTodo);
 
-      if (matchingTodo) {
-        // Can directly "mutate" the nested object
-        matchingTodo.completed = !matchingTodo.completed;
-      }
+      state.todos = newTodo;
+    },
+    deleteTodo(state, { payload }) {
+      const newTodos = state.todos.filter(
+        (todo: Todo) => todo.id !== payload.id
+      );
+
+      setItem("todos", newTodos);
+      state.todos = newTodos;
     },
   },
 });
 
-// `createSlice` automatically generated action creators with these names.
-// export them as named exports from this "slice" file
-export const { todoAdded, todoToggled } = todosSlice.actions;
+export const { addTodo, updateTodo, deleteTodo } = todosSlice.actions;
 
-// Export the slice reducer as the default export
 export default todosSlice.reducer;

@@ -1,19 +1,22 @@
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { provinces } from "@/constants";
 import { api } from "@/core/interceptor";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 
 export const Weather = () => {
   const [value, setValue] = useState("");
-  const [data, setData] = useState<any>({});
+  const [data, setData] = useState<any>(null);
+  const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const params = searchParams.get("lng");
 
   const apiCall = async (city: string) => {
     const res = await api.get(
@@ -30,7 +33,7 @@ export const Weather = () => {
   };
 
   return (
-    <div className="space-y-5 text-center w-full max-w-[70%] mx-auto py-10">
+    <div className="space-y-5 text-center w-full min-h-[280px] mx-auto py-10 px-10">
       {/* Select Option */}
       <div>
         <Select value={value} onValueChange={handleChange}>
@@ -51,7 +54,9 @@ export const Weather = () => {
           <>
             <h2 className="text-xl font-semibold">{data.address}</h2>
             <h3 className="text-xl font-semibold">{data.days?.[0].temp}</h3>
-            <h3 className="text-xl font-semibold">{data.description}</h3>
+            <h3 className="text-xl font-semibold">
+              {params === "en" ? data.description : t("weatherDescription")}
+            </h3>
           </>
         )}
       </div>

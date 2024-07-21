@@ -1,9 +1,10 @@
 import { UserPage } from "@/user";
 import { Login } from "../login/login";
 import { Dashboard } from "@/user/dashboard";
-import { NotFound } from "@/components/not-found";
 import { Weather } from "@/user/weather";
 import { TodoList } from "@/user/todo-list";
+import { Profile } from "@/user/profile";
+import { useTranslation } from "react-i18next";
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     id: 3,
     path: "/user/todo-list",
     label: "TodoList",
+  },
+  {
+    id: 4,
+    path: "/user/profile",
+    label: "Profile",
   },
 ];
 
@@ -44,12 +50,16 @@ const routers = [
         path: "/user/todo-list",
         element: <TodoList />,
       },
+      {
+        path: "/user/profile",
+        element: <Profile />,
+      },
     ],
   },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
+  // {
+  //   path: "*",
+  //   element: <NotFound />,
+  // },
 ];
 const provinces = [
   {
@@ -209,4 +219,22 @@ const provinces = [
   },
 ];
 
-export { routers, routes, provinces };
+const themes = () => {
+  const { t } = useTranslation();
+  return [
+    { label: t("Default"), value: "default", color: "#2c78ce" },
+    { label: t("Orange"), value: "orange", color: "#f1813b" },
+    { label: t("Purple"), value: "purple", color: "#a755e2" },
+    { label: t("Red"), value: "red", color: "#e85454" },
+  ];
+};
+const languages = () => {
+  const { t } = useTranslation();
+
+  return [
+    { label: t("English"), value: "en" },
+    { label: t("Persian"), value: "fa" },
+  ];
+};
+
+export { routers, routes, provinces, themes, languages };

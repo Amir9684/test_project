@@ -1,9 +1,9 @@
 import user from "./user";
-import todos from "./todo"
+import todo from "./todo"
 
 const rootReducer = {
   user,
-  todos
+  todo
 };
 
 export default rootReducer;
